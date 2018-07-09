@@ -18,27 +18,15 @@ export async function search(url, keyword, callback) {
     });
 }
 
-export async function postData(url, body , data ) {
-    // Axios.post({
-    //     method: 'post',
-    //     url: url,
-    //     data: data
-    //   }).then(function (response) {
-    //     return response
-    //   })
-    //   .catch(function (error) {
-    //     throw error
-    //   });
-
-
+export async function postData(url, body , callback) {
     Axios.post(url, body)
         .then(function (response) {
-            console.log(response.status)
-            data(response.data)
+            console.log("post data : " +response.data)
+            callback(response.data, response.status)
         })
         .catch(function (error) {
-            data(error.response.data)
-            console.log(error.response.status)
+            callback(error.response.data, error.response.status)
+            console.log("post error :" + error.response.data)
         });
 
-}
+}      

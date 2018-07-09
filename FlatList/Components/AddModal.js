@@ -7,6 +7,7 @@ import {
 import Modal from 'react-native-modalbox'
 import Button from 'react-native-button'
 import flatListData from "./FlatListData";
+import { postData } from '../../Networking/Network';
 
 var screen = Dimensions.get('window');
 
@@ -98,9 +99,12 @@ export default class AddModal extends Component {
                         "foodDescription": this.state.newFoodDiscription
                       }
                       
-                      flatListData.push(newFood)
-
-                      this.props.parentFlatList.refreshFlatList(newFood);                                
+                      // flatListData.push(newFood);
+                      // console.log(JSON.stringify(flatListData))
+                      postData("http://seqaya.getsandbox.com/food" , newFood, (data, code)=>{
+                        
+                        this.props.parentFlatList.refreshFlatList(newFood);                                
+                      })
                       this.refs.myModal.close(); 
                     }}
 

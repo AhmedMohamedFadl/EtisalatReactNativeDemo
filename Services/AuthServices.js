@@ -32,7 +32,9 @@ export async function login(email, password, callback) {
     email: email,
     password: password
   };
-  postData(`${base_url}${loginUrl}`, body, data => {
+  postData(`${base_url}${loginUrl}`, body, (data, code) => {
     callback(data);
   });
 }
+
+

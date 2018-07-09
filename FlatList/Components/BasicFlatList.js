@@ -28,22 +28,25 @@ export default class BasicFlatList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      deletedRowKey: null,
+      key: null,
       name: "",
       showSearch: false,
       keyword: "",
       searchData: []
     };
-    getFoods(response => this.setState({searchData: response}))
+    getFoods(response => this.setState({searchData: response}));
     this._onAddPress = this._onAddPress.bind(this);
   }
 
-  refreshFlatList = deletedKey => {
-    this.setState(prevState => {
-      return {
-        deletedRowKey: deletedKey
-      };
-    });
+  refreshFlatList = key => {
+    // getFoods(response => this.setState({searchData: response}));
+    console.log("newkey: " + JSON.stringify(key))
+    // var list = this.state.searchData
+    // list.push(key)
+    this.setState(prevState => ({
+      searchData: [...prevState.searchData, key]
+    }));
+    console.log("search length  "  + this.state.searchData.length)
   };
 
   _onAddPress = () => {

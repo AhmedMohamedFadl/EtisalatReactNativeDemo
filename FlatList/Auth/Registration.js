@@ -1,6 +1,8 @@
 import React from 'react'
-import { StyleSheet, StatusBar, TextInput, Image } from 'react-native'
+import { StyleSheet, StatusBar, TextInput, Image, Alert } from 'react-native'
 import { View, Text, Thumbnail, Button } from 'native-base';
+import { postData } from '../../Networking/Network';
+import { base_url, signUpUrl } from '../../Networking/Config/Config';
 
 const logo = require("../../images/as-logo.png");
 export default class RegistrationScreen extends React.Component {
@@ -22,8 +24,25 @@ export default class RegistrationScreen extends React.Component {
         var email = this.state.email
         var password = this.state.password
 
+        body = {
+            firstname,
+            lastname,
+            email,
+            password
+        }
+
         if (firstname.length == 0 || lastname.length == 0 || email.length == 0 || password.length == 0) {
             alert("All fields are required , please try again!")
+        }
+
+        else {
+            postData(base_url+signUpUrl, body, (data, code) => {
+                if (code === 200) {
+                    alert("Successful Registration, please login")
+                } else {
+                    Alert.alert("Registration error ", data.message);
+                }
+            })
         }
     }
 
