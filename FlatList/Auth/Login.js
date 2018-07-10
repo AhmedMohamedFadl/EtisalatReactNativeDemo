@@ -3,16 +3,10 @@ import { StyleSheet, StatusBar, TextInput, Image , AsyncStorage } from 'react-na
 import { View, Text, Button } from 'native-base';
 const logo = require("../../images/as-logo.png");;
 import { login } from '../../Services/AuthServices';
+const etisalatLogo = require("../../images/etisalatLogo2.png")
+
 import {
-    BallIndicator,
-    BarIndicator,
-    DotIndicator,
-    MaterialIndicator,
-    PacmanIndicator,
-    PulseIndicator,
-    SkypeIndicator,
     UIActivityIndicator,
-    WaveIndicator
 } from 'react-native-indicators';
 
 export default class LoginScreen extends React.Component {
@@ -72,11 +66,9 @@ export default class LoginScreen extends React.Component {
     render() {
         return (
 
-            <View style={styles.container} justifyContent="flex-start" alignItems="center">
-                <StatusBar backgroundColor="#81b9bf"
-                    barStyle="dark-content"
-                />
-                <Image source={logo} style={styles.logo} />
+            <View style={styles.container} alignItems="center">
+                
+                <Image source={etisalatLogo} style={styles.logo} />
                 <TextInput
                     style={styles.emailInput}
                     placeholder="Email"
@@ -101,9 +93,6 @@ export default class LoginScreen extends React.Component {
                 >
                     <Text >Login</Text>
                 </Button>
-
-                <Text style={{ marginTop: 10, color: "#babdbe" }} >Don't have an account ? Sign In</Text>
-
                 {this.showLoadingIndicator()}
 
             </View>
@@ -117,11 +106,10 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: "#ffffff",
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'flex-start'
+        alignItems: 'center'
     },
     logo: {
-        marginTop: 100,
+        marginTop: 75,
         height: 200,
         width: 200,
         marginBottom: 10
@@ -157,7 +145,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         width: 200,
         justifyContent: 'center',
-        marginTop: 10,
+        marginTop: 30,
         backgroundColor: "#eceff1"
     }
 })

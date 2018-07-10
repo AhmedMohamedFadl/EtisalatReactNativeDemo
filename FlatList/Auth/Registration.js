@@ -1,15 +1,21 @@
 import React from 'react'
 import { StyleSheet, StatusBar, TextInput, Image, Alert } from 'react-native'
-import { View, Text, Thumbnail, Button } from 'native-base';
+import { View, Text, Button } from 'native-base';
 import { postData } from '../../Networking/Network';
 import { base_url, signUpUrl } from '../../Networking/Config/Config';
 
+import {
+    UIActivityIndicator,
+} from 'react-native-indicators';
+
 const logo = require("../../images/as-logo.png");
+const etisalatLogo = require("../../images/etisalatLogo2.png")
 export default class RegistrationScreen extends React.Component {
 
     constructor(props) {
         super(props)
         this.state = {
+            isLoading: false,
             firstname: '',
             lastname: '',
             email: '',
@@ -36,16 +42,31 @@ export default class RegistrationScreen extends React.Component {
         }
 
         else {
+            this.setState({
+                isLoading: true
+            })
             postData(base_url+signUpUrl, body, (data, code) => {
                 if (code === 200) {
-                    alert("Successful Registration, please login")
+                    this.setState({
+                        isLoading: false
+                    })
+                    alert("Successfuly Registration, please go to login screen!")
+
                 } else {
-                    Alert.alert("Registration error ", data.message);
+                    this.setState({
+                        isLoading: false
+                    })
+                    Alert.alert("error ", data.message);
                 }
             })
         }
     }
 
+    showRegistrationIndicator = () => {
+        if (this.state.isLoading) {
+            return <UIActivityIndicator color='gray' />;
+        }
+    }
 
     render() {
         return (
@@ -54,7 +75,7 @@ export default class RegistrationScreen extends React.Component {
                     barStyle="dark-content"
 
                 />
-                <Image source={logo} style={styles.logo} />
+                <Image source={etisalatLogo} style={styles.logo} />
                 <TextInput
                     style={styles.firstnameInput}
                     placeholder="FirstName"
@@ -87,6 +108,7 @@ export default class RegistrationScreen extends React.Component {
                 <Button light style={styles.signUp} alignItems="center" onPress={this.onSignUpPressed}>
                     <Text >Sign Up</Text>
                 </Button>
+                {this.showRegistrationIndicator()}
             </View>
         )
     }
@@ -101,7 +123,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start'
     },
     logo: {
-        marginTop: 100,
+        marginTop: 75,
         height: 200,
         width: 200,
         marginBottom: 10

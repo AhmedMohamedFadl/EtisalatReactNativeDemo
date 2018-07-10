@@ -34,7 +34,7 @@ export default class BasicFlatList extends Component {
       keyword: "",
       searchData: []
     };
-    getFoods(response => this.setState({searchData: response}));
+    getFoods(response => this.setState({ searchData: response }));
     this._onAddPress = this._onAddPress.bind(this);
   }
 
@@ -46,7 +46,7 @@ export default class BasicFlatList extends Component {
     this.setState(prevState => ({
       searchData: [...prevState.searchData, key]
     }));
-    console.log("search length  "  + this.state.searchData.length)
+    console.log("search length  " + this.state.searchData.length)
   };
 
   _onAddPress = () => {
@@ -121,7 +121,7 @@ export default class BasicFlatList extends Component {
           </Left>
 
           <Body>{this.renderSearch()}</Body>
-
+        
           <Right>
             <Button
               transparent
@@ -133,9 +133,6 @@ export default class BasicFlatList extends Component {
                 name={this.state.showSearch ? "close" : "search"}
                 size={20}
               />
-            </Button>
-            <Button transparent>
-              <Icon transparent name="favorite" size={20} />
             </Button>
             <Button transparent>
               <Icon
