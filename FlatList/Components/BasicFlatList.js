@@ -17,11 +17,16 @@ import {
   FlatList,
   StyleSheet,
   TextInput,
-  View
+  View,
+  Text
 } from "react-native";
 import { searchFoods, getFoods } from "../../Services/AuthServices";
 import AddModal from "./AddModal";
-import flatListData from "./FlatListData";
+
+import {
+  UIActivityIndicator,
+} from 'react-native-indicators';
+
 import NHCardShowcase from "./NHCardShowcase";
 
 export default class BasicFlatList extends Component {
@@ -32,17 +37,19 @@ export default class BasicFlatList extends Component {
       name: "",
       showSearch: false,
       keyword: "",
-      searchData: []
+      searchData: [],
+      isLoadingData:true
     };
-    getFoods(response => this.setState({ searchData: response }));
+    getFoods(response => this.setState({
+       searchData: response ,
+       isLoadingData:false
+    }));
+    getFoods
     this._onAddPress = this._onAddPress.bind(this);
   }
 
   refreshFlatList = key => {
-    // getFoods(response => this.setState({searchData: response}));
     console.log("newkey: " + JSON.stringify(key))
-    // var list = this.state.searchData
-    // list.push(key)
     this.setState(prevState => ({
       searchData: [...prevState.searchData, key]
     }));
@@ -111,6 +118,34 @@ export default class BasicFlatList extends Component {
   }
 
   render() {
+
+    let view = this.state.isLoadingData ? (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <UIActivityIndicator color='gray' />
+        <Text style={{ marginTop: 8 }} children="Please wait..." />
+      </View>
+    ) : (
+      <Content padder>
+          <View style={{ backgroundColor: "white" }}>
+          <FlatList
+          data={this.state.searchData}
+          renderItem={({ item, index }) => {
+            //console.log(`Item = ${JSON.stringify(item)} , Index =${index}`)
+
+            return (
+              <NHCardShowcase
+                item={item}
+                root={this}
+                index={index}
+                parentFlatList={this}
+              />
+            );
+          }}
+        />
+          </View>
+        </Content>
+      )
+
     return (
       <Container style={{ paddingTop: 24 }}>
         <Header style={{ backgroundColor: "#ffffff", elevation: 12 }}>
@@ -121,7 +156,7 @@ export default class BasicFlatList extends Component {
           </Left>
 
           <Body>{this.renderSearch()}</Body>
-        
+
           <Right>
             <Button
               transparent
@@ -144,27 +179,7 @@ export default class BasicFlatList extends Component {
             </Button>
           </Right>
         </Header>
-
-        <Content padder>
-          <View style={{ backgroundColor: "white" }}>
-            <FlatList
-              data={this.state.searchData}
-              renderItem={({ item, index }) => {
-                //console.log(`Item = ${JSON.stringify(item)} , Index =${index}`)
-
-                return (
-                  <NHCardShowcase
-                    item={item}
-                    root={this}
-                    index={index}
-                    parentFlatList={this}
-                  />
-                );
-              }}
-            />
-          </View>
-        </Content>
-
+              {view}
         <AddModal ref={"addModal"} parentFlatList={this} />
       </Container>
     );
