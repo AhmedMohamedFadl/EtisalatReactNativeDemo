@@ -8,7 +8,6 @@ import {
   Right,
   Title
 } from "native-base";
-// import Icon from 'react-native-vector-icons/Feather';
 import Icon from "react-native-vector-icons/MaterialIcons";
 import React, { Component } from "react";
 import {
@@ -38,22 +37,27 @@ export default class BasicFlatList extends Component {
       showSearch: false,
       keyword: "",
       searchData: [],
-      isLoadingData:true
+      isLoadingData: true
     };
-    getFoods(response => this.setState({
-       searchData: response ,
-       isLoadingData:false
-    }));
-    getFoods
+
+    getFoods(response => {
+      console.log("foods length" + response.length);
+      this.setState({
+        isLoadingData: false,
+        searchData: response
+      })
+    });
+
     this._onAddPress = this._onAddPress.bind(this);
   }
 
   refreshFlatList = key => {
     console.log("newkey: " + JSON.stringify(key))
+
     this.setState(prevState => ({
       searchData: [...prevState.searchData, key]
     }));
-    console.log("search length  " + this.state.searchData.length)
+    console.log("search length  " + this.state.searchData.length);
   };
 
   _onAddPress = () => {
@@ -105,7 +109,59 @@ export default class BasicFlatList extends Component {
         />
       );
     } else {
-      return <Title style={{ color: "#000", fontWeight: 'bold' }}>Tuts</Title>;
+      return <Title style={{ color: "#000", fontWeight: "bold" }}>Tuts</Title>
+    }
+  };
+
+  renderList = () => {
+    let view = this.state.isLoadingData ? (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <UIActivityIndicator color='gray' />
+        <Text style={{ marginTop: 8 }} children="Please wait..." />
+      </View>
+    ) : (
+        <Content padder>
+          <View style={{ backgroundColor: "white" }}>
+            <FlatList
+              data={this.state.searchData}
+              renderItem={({ item, index }) => {
+                //console.log(`Item = ${JSON.stringify(item)} , Index =${index}`)
+
+                return (
+                  <NHCardShowcase
+                    item={item}
+                    root={this}
+                    index={index}
+                    parentFlatList={this}
+                  />
+                );
+              }}
+            />
+          </View>
+        </Content>
+      );
+    if (this.state.searchData.length > 0 || this.state.isLoadingData) {
+      return (view);
+    } else {
+      return (
+        <View
+          style={{
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
+          <Text
+            style={{
+              color: "#000",
+              fontWeight: "bold",
+              fontSize: 20
+            }}
+          >
+            No result
+          </Text>
+        </View>
+      );
     }
   };
 
@@ -119,32 +175,7 @@ export default class BasicFlatList extends Component {
 
   render() {
 
-    let view = this.state.isLoadingData ? (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <UIActivityIndicator color='gray' />
-        <Text style={{ marginTop: 8 }} children="Please wait..." />
-      </View>
-    ) : (
-      <Content padder>
-          <View style={{ backgroundColor: "white" }}>
-          <FlatList
-          data={this.state.searchData}
-          renderItem={({ item, index }) => {
-            //console.log(`Item = ${JSON.stringify(item)} , Index =${index}`)
 
-            return (
-              <NHCardShowcase
-                item={item}
-                root={this}
-                index={index}
-                parentFlatList={this}
-              />
-            );
-          }}
-        />
-          </View>
-        </Content>
-      )
 
     return (
       <Container style={{ paddingTop: 24 }}>
@@ -161,6 +192,11 @@ export default class BasicFlatList extends Component {
             <Button
               transparent
               onPress={() => {
+                if (this.state.showSearch) {
+                  getFoods(response => {
+                    this.setState({ searchData: response });
+                  });
+                }
                 this.setState({ showSearch: !this.state.showSearch });
               }}
             >
@@ -179,7 +215,9 @@ export default class BasicFlatList extends Component {
             </Button>
           </Right>
         </Header>
-              {view}
+
+        {this.renderList()}
+
         <AddModal ref={"addModal"} parentFlatList={this} />
       </Container>
     );
