@@ -8,7 +8,6 @@ import {
   Right,
   Title
 } from "native-base";
-// import Icon from 'react-native-vector-icons/Feather';
 import Icon from "react-native-vector-icons/MaterialIcons";
 import React, { Component } from "react";
 import {
@@ -17,7 +16,8 @@ import {
   FlatList,
   StyleSheet,
   TextInput,
-  View
+  View,
+  Text
 } from "react-native";
 import { searchFoods, getFoods } from "../../Services/AuthServices";
 import AddModal from "./AddModal";
@@ -34,19 +34,22 @@ export default class BasicFlatList extends Component {
       keyword: "",
       searchData: []
     };
-    getFoods(response => this.setState({searchData: response}));
+    getFoods(response => {
+      console.log("foods length" + response.length);
+      this.setState({ searchData: response });
+    });
     this._onAddPress = this._onAddPress.bind(this);
   }
 
   refreshFlatList = key => {
     // getFoods(response => this.setState({searchData: response}));
-    console.log("newkey: " + JSON.stringify(key))
+    console.log("newkey: " + JSON.stringify(key));
     // var list = this.state.searchData
     // list.push(key)
     this.setState(prevState => ({
       searchData: [...prevState.searchData, key]
     }));
-    console.log("search length  "  + this.state.searchData.length)
+    console.log("search length  " + this.state.searchData.length);
   };
 
   _onAddPress = () => {
@@ -98,7 +101,57 @@ export default class BasicFlatList extends Component {
         />
       );
     } else {
-      return <Title style={{ color: "#000", fontWeight: 'bold' }}>Tuts</Title>;
+      return <Title style={{ color: "#000", fontWeight: "bold" }}>Tuts</Title>;
+    }
+  };
+
+  renderList = () => {
+    if (this.state.searchData.length > 0) {
+      return (
+        <Content padder>
+          <View
+            style={{
+              backgroundColor: "white"
+            }}
+          >
+            <FlatList
+              data={this.state.searchData}
+              renderItem={({ item, index }) => {
+                //console.log(`Item = ${JSON.stringify(item)} , Index =${index}`)
+
+                return (
+                  <NHCardShowcase
+                    item={item}
+                    root={this}
+                    index={index}
+                    parentFlatList={this}
+                  />
+                );
+              }}
+            />
+          </View>
+        </Content>
+      );
+    } else {
+      return (
+        <View
+          style={{
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
+          <Text
+            style={{
+              color: "#000",
+              fontWeight: "bold",
+              fontSize: 20
+            }}
+          >
+            No result
+          </Text>
+        </View>
+      );
     }
   };
 
@@ -126,6 +179,11 @@ export default class BasicFlatList extends Component {
             <Button
               transparent
               onPress={() => {
+                if (this.state.showSearch) {
+                  getFoods(response => {
+                    this.setState({ searchData: response });
+                  });
+                }
                 this.setState({ showSearch: !this.state.showSearch });
               }}
             >
@@ -148,25 +206,7 @@ export default class BasicFlatList extends Component {
           </Right>
         </Header>
 
-        <Content padder>
-          <View style={{ backgroundColor: "white" }}>
-            <FlatList
-              data={this.state.searchData}
-              renderItem={({ item, index }) => {
-                //console.log(`Item = ${JSON.stringify(item)} , Index =${index}`)
-
-                return (
-                  <NHCardShowcase
-                    item={item}
-                    root={this}
-                    index={index}
-                    parentFlatList={this}
-                  />
-                );
-              }}
-            />
-          </View>
-        </Content>
+        {this.renderList()}
 
         <AddModal ref={"addModal"} parentFlatList={this} />
       </Container>
