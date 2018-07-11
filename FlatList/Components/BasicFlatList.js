@@ -34,6 +34,7 @@ export default class BasicFlatList extends Component {
       keyword: "",
       searchData: []
     };
+
     getFoods(response => {
       console.log("foods length" + response.length);
       this.setState({ searchData: response });
@@ -101,7 +102,7 @@ export default class BasicFlatList extends Component {
         />
       );
     } else {
-      return <Title style={{ color: "#000", fontWeight: "bold" }}>Tuts</Title>;
+      return <Title style={{ color: "#000", fontWeight: "bold" }}>Tuts</Title>
     }
   };
 
@@ -174,7 +175,7 @@ export default class BasicFlatList extends Component {
           </Left>
 
           <Body>{this.renderSearch()}</Body>
-
+        
           <Right>
             <Button
               transparent
@@ -191,9 +192,6 @@ export default class BasicFlatList extends Component {
                 name={this.state.showSearch ? "close" : "search"}
                 size={20}
               />
-            </Button>
-            <Button transparent>
-              <Icon transparent name="favorite" size={20} />
             </Button>
             <Button transparent>
               <Icon
