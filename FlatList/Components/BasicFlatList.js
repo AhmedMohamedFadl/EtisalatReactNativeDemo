@@ -17,14 +17,13 @@ import {
   StyleSheet,
   TextInput,
   View,
-  Text
+  Text,
+  Image
 } from "react-native";
 import { searchFoods, getFoods } from "../../Services/AuthServices";
 import AddModal from "./AddModal";
 
-import {
-  UIActivityIndicator,
-} from 'react-native-indicators';
+import { UIActivityIndicator } from "react-native-indicators";
 
 import NHCardShowcase from "./NHCardShowcase";
 
@@ -45,14 +44,14 @@ export default class BasicFlatList extends Component {
       this.setState({
         isLoadingData: false,
         searchData: response
-      })
+      });
     });
 
     this._onAddPress = this._onAddPress.bind(this);
   }
 
   refreshFlatList = key => {
-    console.log("newkey: " + JSON.stringify(key))
+    console.log("newkey: " + JSON.stringify(key));
 
     this.setState(prevState => ({
       searchData: [...prevState.searchData, key]
@@ -109,39 +108,39 @@ export default class BasicFlatList extends Component {
         />
       );
     } else {
-      return <Title style={{ color: "#000", fontWeight: "bold" }}>Tuts</Title>
+      return <Title style={{ color: "#000", fontWeight: "bold" }}>Tuts</Title>;
     }
   };
 
   renderList = () => {
     let view = this.state.isLoadingData ? (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <UIActivityIndicator color='gray' />
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <UIActivityIndicator color="gray" />
         <Text style={{ marginTop: 8 }} children="Please wait..." />
       </View>
     ) : (
-        <Content padder>
-          <View style={{ backgroundColor: "white" }}>
-            <FlatList
-              data={this.state.searchData}
-              renderItem={({ item, index }) => {
-                //console.log(`Item = ${JSON.stringify(item)} , Index =${index}`)
+      <Content padder>
+        <View style={{ backgroundColor: "white" }}>
+          <FlatList
+            data={this.state.searchData}
+            renderItem={({ item, index }) => {
+              //console.log(`Item = ${JSON.stringify(item)} , Index =${index}`)
 
-                return (
-                  <NHCardShowcase
-                    item={item}
-                    root={this}
-                    index={index}
-                    parentFlatList={this}
-                  />
-                );
-              }}
-            />
-          </View>
-        </Content>
-      );
+              return (
+                <NHCardShowcase
+                  item={item}
+                  root={this}
+                  index={index}
+                  parentFlatList={this}
+                />
+              );
+            }}
+          />
+        </View>
+      </Content>
+    );
     if (this.state.searchData.length > 0 || this.state.isLoadingData) {
-      return (view);
+      return view;
     } else {
       return (
         <View
@@ -174,14 +173,15 @@ export default class BasicFlatList extends Component {
   }
 
   render() {
-
-
-
     return (
       <Container style={{ paddingTop: 24 }}>
         <Header style={{ backgroundColor: "#ffffff", elevation: 12 }}>
           <Left>
             <Button transparent onPress={this._logoutAlert}>
+              {/* <Image
+                source={require("../../images/logout-sign.png")}
+                style={{ width: 20, height: 20 }}
+              /> */}
               <Icon name="undo" size={20} />
             </Button>
           </Left>
