@@ -2,6 +2,7 @@ import LoginScreen from "../Auth/Login";
 import RegistrationScreen from "../Auth/Registration";
 import { Ionicons } from '@expo/vector-icons'; // Version can be specified in package.json
 import React from 'react';
+import { Image } from 'react-native';
 import { TabNavigator, TabBarBottom } from 'react-navigation'; // Version can be specified in package.json
 
 

@@ -139,9 +139,9 @@ export default class BasicFlatList extends Component {
         </View>
       </Content>
     );
-    if (this.state.searchData.length > 0 || this.state.isLoadingData) {
+    if (this.state.isLoadingData || this.state.searchData.length > 0) {
       return view;
-    } else {
+    } else if(!this.state.isLoadingData && this.state.searchData.length == 0){
       return (
         <View
           style={{
@@ -182,7 +182,8 @@ export default class BasicFlatList extends Component {
                 source={require("../../images/logout-sign.png")}
                 style={{ width: 20, height: 20 }}
               /> */}
-              <Icon name="undo" size={20} />
+              <Image source={require('../../images/logout-sign.png')} style={{width: 20, height: 20}} />;
+              {/* <Icon name="undo" size={20} /> */}
             </Button>
           </Left>
 
@@ -193,7 +194,9 @@ export default class BasicFlatList extends Component {
               transparent
               onPress={() => {
                 if (this.state.showSearch) {
+                  this.setState({ isLoadingData: true });
                   getFoods(response => {
+                    this.setState({ isLoadingData: false });
                     this.setState({ searchData: response });
                   });
                 }
